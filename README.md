@@ -10,7 +10,7 @@
 <br>&nbsp;
 <br><br>- \*\*Webデモ版（API不要）\*\*: [デモ版のページが開きます](https://eaaaayk.github.io/deepYoutubeSearcher/) 
 <br>※APIキーなしでUI動作やソナー探査演出、ブックマーク機能を体験できます。 
-<br>- \*\*GAS版コード\*\*: \`/gas\` ディレクトリ内に格納（Google Apps Script + YouTube Data API v3 連動） 
+<br>- \*\*GAS版コード\*\*: \`/GAS版\` ディレクトリ内に格納（Google Apps Script + YouTube Data API v3 連動） 
 <br>&nbsp;
 
 <br>&nbsp;
