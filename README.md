@@ -34,9 +34,7 @@
 <br>&nbsp;
 ## 📂 ディレクトリ構成
 <br>\`\`\`text 
-<br>├── index.html # スタンドアロンWebデモ版（ポートフォリオ展示用） 
-<br>└── GAS版/ 
-<br>
-     ├── Code.gs # GASバックエンド処理（YouTube API呼び出し・データ整形） 
-<br> 
+├── index.html # スタンドアロンWebデモ版（ポートフォリオ展示用） 
+└── GAS版/ 
+     ├── Code.gs # GASバックエンド処理（YouTube API呼び出し・データ整形）  
      └── Index.html # GASウェブアプリ用フロントエンドHTML
