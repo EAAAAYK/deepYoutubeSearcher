@@ -43,9 +43,6 @@
         backdrop-filter: blur(12px);
         border: 1px solid rgba(51, 65, 85, 0.5);
       }
-      .cyber-card:hover {
-        border-color: rgba(6, 182, 212, 0.4);
-      }
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
@@ -63,247 +60,193 @@
     </style>
   </head>
   <body class="min-h-screen pb-16 font-sans antialiased text-slate-200">
-    <!-- Header Navigation -->
+    <!-- Header Navigation (スリム化・スマホ対応) -->
     <header
       class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-30 backdrop-blur-md"
     >
       <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+        class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between"
       >
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
           <div
-            class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+            class="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400"
           >
-            <i class="ph-bold ph-waves text-xl"></i>
+            <i class="ph-bold ph-waves text-base"></i>
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1
-                class="text-base font-bold tracking-wider font-mono bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent"
-              >
-                DEEP YOUTUBE SEARCHER
-              </h1>
-              <span
-                class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30"
-                >DEMO VERSION</span
-              >
-            </div>
-            <p
-              class="text-[10px] text-slate-400 font-mono tracking-widest uppercase"
-            >
-              YouTube 深海発掘機 // Interactive Portfolio Demo
-            </p>
-          </div>
+          <h1
+            class="text-sm sm:text-base font-bold tracking-wider font-mono bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent truncate"
+          >
+            DEEP YOUTUBE SEARCHER
+          </h1>
+          <span
+            class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30"
+            >DEMO</span
+          >
         </div>
 
-        <div class="flex items-center gap-3">
-          <button
-            id="toggle-bookmarks-btn"
-            onclick="toggleBookmarkPanel()"
-            class="relative px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 hover:border-cyan-500/50 text-xs font-mono text-slate-300 transition flex items-center gap-2 cursor-pointer"
+        <button
+          id="toggle-bookmarks-btn"
+          onclick="toggleBookmarkPanel()"
+          class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 hover:border-cyan-500/50 text-xs font-mono text-slate-300 transition flex items-center gap-1.5 cursor-pointer"
+        >
+          <i class="ph-bold ph-bookmark-simple text-cyan-400"></i>
+          <span>保存</span>
+          <span
+            id="bookmark-count"
+            class="bg-cyan-500/20 text-cyan-300 px-1.5 py-0.2 rounded text-[10px]"
+            >0</span
           >
-            <i class="ph-bold ph-bookmark-simple text-cyan-400"></i>
-            <span>保存一覧</span>
-            <span
-              id="bookmark-count"
-              class="bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded text-[10px]"
-              >0</span
-            >
-          </button>
-        </div>
+        </button>
       </div>
     </header>
 
     <!-- Main Content Area -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+    <main class="max-w-7xl mx-auto px-4 pt-4 space-y-5">
       <!-- Control Panel Section -->
-      <section
-        class="cyber-card rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden"
-      >
-        <div class="flex flex-col gap-5">
-          <!-- Status Board Header -->
+      <section class="cyber-card rounded-xl p-4 sm:p-5 shadow-xl">
+        <div class="flex flex-col gap-4">
+          <!-- Status Line -->
           <div
-            class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4"
+            class="flex items-center justify-between border-b border-slate-800 pb-3 text-xs font-mono"
           >
-            <div
-              class="flex items-center gap-2 text-xs font-mono text-cyan-400"
-            >
+            <div class="flex items-center gap-2 text-cyan-400">
               <span
                 class="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse"
               ></span>
-              <span id="sonar-status-text"
-                >DEMO DATABASE READY // 24 ARCHIVES LOADED</span
-              >
+              <span id="sonar-status-text">探査ジャンルを選択してください</span>
             </div>
-
-            <div
-              class="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-400"
-            >
-              <span
-                class="px-2.5 py-1 rounded bg-slate-800/90 border border-slate-700/60 text-slate-300"
-                >条件: ≤ 5,000回再生</span
-              >
-              <span
-                class="px-2.5 py-1 rounded bg-slate-800/90 border border-slate-700/60 text-slate-300"
-                >長尺: ≥ 10分</span
-              >
-              <span
-                class="px-2.5 py-1 rounded bg-slate-800/90 border border-slate-700/60 text-cyan-300"
-                >APIキー不要デモ</span
-              >
-            </div>
+            <span class="text-slate-500 text-[11px]">≤5000回再生</span>
           </div>
 
-          <!-- Main Search Controls Grid -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            <!-- Keyword Selection & Filter (8 cols) -->
-            <div class="lg:col-span-8 space-y-3">
-              <label
-                class="block text-xs font-mono text-slate-300 tracking-wider uppercase"
-              >
-                探査対象ジャンル選択（下のプリセットタグから選択）
-              </label>
-
-              <div class="relative">
-                <input
-                  type="text"
-                  id="keyword-input"
-                  value="哲学"
-                  readonly
-                  class="w-full bg-slate-900/60 border border-slate-800 text-cyan-300 font-bold rounded-xl px-4 py-3 pl-10 text-xs sm:text-sm outline-none font-mono cursor-not-allowed select-none"
-                />
-                <i
-                  class="ph-bold ph-tag absolute left-3.5 top-3.5 text-cyan-400 text-lg"
-                ></i>
-              </div>
-
-              <!-- Preset Categories -->
-              <div class="flex flex-wrap items-center gap-1.5 pt-1">
-                <span class="text-xs text-slate-500 font-mono mr-1"
-                  >仕込みジャンル:</span
-                >
-                <button
-                  onclick="setCategory('哲学')"
-                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
-                >
-                  #哲学・思想
-                </button>
-                <button
-                  onclick="setCategory('ラジオ')"
-                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
-                >
-                  #深夜ラジオ
-                </button>
-                <button
-                  onclick="setCategory('朗読')"
-                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
-                >
-                  #名作朗読
-                </button>
-                <button
-                  onclick="setCategory('アーカイブ')"
-                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
-                >
-                  #個人アーカイブ
-                </button>
-                <button
-                  onclick="setCategory('布教')"
-                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
-                >
-                  #【布教枠】C-C-B等
-                </button>
-              </div>
-            </div>
-
-            <!-- Execution Button (4 cols) -->
-            <div
-              class="lg:col-span-4 space-y-3 flex flex-col justify-end pb-0.5"
+          <!-- Category Selectors (わかりやすいタブ形式) -->
+          <div class="space-y-2">
+            <label
+              class="block text-xs font-mono text-slate-400 tracking-wider"
             >
+              ジャンル切替:
+            </label>
+            <div id="category-chips" class="flex flex-wrap gap-2">
               <button
-                id="dive-btn"
-                onclick="runDemoSearch()"
-                class="w-full h-14 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold font-mono text-sm rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] transition transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+                onclick="setCategory('哲学')"
+                id="chip-哲学"
+                class="chip-btn active-chip px-3 py-1.5 rounded-lg border border-cyan-500 bg-cyan-500/20 text-cyan-300 text-xs font-mono transition cursor-pointer"
               >
-                <i class="ph-bold ph-compass text-xl"></i>
-                <span>ソナー探査開始（デモ発掘）</span>
+                #哲学・思想
+              </button>
+              <button
+                onclick="setCategory('ラジオ')"
+                id="chip-ラジオ"
+                class="chip-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900/80 text-slate-300 hover:border-slate-500 text-xs font-mono transition cursor-pointer"
+              >
+                #深夜ラジオ
+              </button>
+              <button
+                onclick="setCategory('朗読')"
+                id="chip-朗読"
+                class="chip-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900/80 text-slate-300 hover:border-slate-500 text-xs font-mono transition cursor-pointer"
+              >
+                #名作朗読
+              </button>
+              <button
+                onclick="setCategory('アーカイブ')"
+                id="chip-アーカイブ"
+                class="chip-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900/80 text-slate-300 hover:border-slate-500 text-xs font-mono transition cursor-pointer"
+              >
+                #個人記録
+              </button>
+              <button
+                onclick="setCategory('布教')"
+                id="chip-布教"
+                class="chip-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900/80 text-slate-300 hover:border-slate-500 text-xs font-mono transition cursor-pointer"
+              >
+                #【布教枠】C-C-B等
               </button>
             </div>
           </div>
+
+          <!-- Execution Button -->
+          <button
+            id="dive-btn"
+            onclick="runDemoSearch()"
+            class="w-full h-12 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold font-mono text-sm rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.25)] transition transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-1"
+          >
+            <i class="ph-bold ph-compass text-lg"></i>
+            <span>ソナー探査開始（発掘）</span>
+          </button>
         </div>
       </section>
 
-      <!-- Results Toolbar -->
-      <div class="flex items-center justify-between pt-2 px-1">
+      <!-- Results Toolbar (初期状態では非表示) -->
+      <div
+        id="results-toolbar"
+        class="hidden flex items-center justify-between pt-1 px-1"
+      >
         <div class="flex items-center gap-2">
-          <h2 class="text-sm font-mono text-slate-300 flex items-center gap-2">
+          <h2
+            class="text-xs font-mono text-slate-300 flex items-center gap-1.5"
+          >
             <i class="ph-bold ph-lightning text-cyan-400"></i>
-            発掘結果一覧
+            発掘結果
           </h2>
           <span
             id="results-count-badge"
-            class="text-xs font-mono bg-slate-800 text-cyan-400 px-2 py-0.5 rounded border border-slate-700"
+            class="text-[11px] font-mono bg-slate-800 text-cyan-400 px-2 py-0.5 rounded border border-slate-700"
             >3 件検出</span
           >
         </div>
 
-        <div class="flex items-center gap-2">
-          <select
-            id="sort-select"
-            onchange="sortResults()"
-            class="bg-slate-900 border border-slate-700 text-xs text-slate-300 font-mono rounded-lg px-2.5 py-1.5 outline-none cursor-pointer"
-          >
-            <option value="default">並び順: 標準（ランダム）</option>
-            <option value="views-asc">再生数: 少ない順</option>
-            <option value="views-desc">再生数: 多い順</option>
-            <option value="date-desc">投稿日: 新しい順</option>
-            <option value="duration-desc">動画長: 長い順</option>
-          </select>
-        </div>
+        <select
+          id="sort-select"
+          onchange="sortResults()"
+          class="bg-slate-900 border border-slate-700 text-xs text-slate-300 font-mono rounded-lg px-2 py-1 outline-none cursor-pointer"
+        >
+          <option value="default">並び順: ランダム</option>
+          <option value="views-asc">再生数: 少ない順</option>
+          <option value="views-desc">再生数: 多い順</option>
+          <option value="date-desc">投稿日: 新しい順</option>
+        </select>
       </div>
 
       <!-- Loading State -->
       <div
         id="loading-overlay"
-        class="hidden py-16 flex flex-col items-center justify-center text-center space-y-4"
+        class="hidden py-12 flex flex-col items-center justify-center text-center space-y-3"
       >
-        <div class="relative w-16 h-16">
+        <div class="relative w-12 h-12">
           <div
             class="absolute inset-0 rounded-full border-2 border-cyan-500/20 border-t-cyan-400 animate-spin"
           ></div>
           <div
-            class="absolute inset-2 rounded-full border-2 border-emerald-500/20 border-b-emerald-400 animate-spin"
+            class="absolute inset-1.5 rounded-full border-2 border-emerald-500/20 border-b-emerald-400 animate-spin"
             style="animation-direction: reverse"
           ></div>
           <i
-            class="ph-bold ph-pulse text-cyan-400 text-xl absolute inset-0 m-auto animate-pulse"
+            class="ph-bold ph-pulse text-cyan-400 text-lg absolute inset-0 m-auto animate-pulse"
           ></i>
         </div>
         <p
           class="text-xs font-mono text-cyan-400 tracking-widest animate-pulse"
         >
-          ⚡ 時空の深層をスキャン中...（地層照合中）
+          深海地層を照合中...
+        </p>
+      </div>
+
+      <!-- Initial Standby State (初期状態) -->
+      <div
+        id="initial-state"
+        class="py-12 text-center space-y-2 border border-dashed border-slate-800/80 rounded-xl bg-slate-950/30"
+      >
+        <i class="ph-bold ph-binoculars text-3xl text-slate-600"></i>
+        <p class="text-xs font-mono text-slate-400">
+          ジャンルを選択して探査ボタンを押してください
         </p>
       </div>
 
       <!-- Video Grid -->
       <div
         id="video-grid"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
       ></div>
-
-      <!-- Empty State -->
-      <div
-        id="empty-state"
-        class="hidden py-16 text-center space-y-3 border border-dashed border-slate-800 rounded-2xl"
-      >
-        <i class="ph-bold ph-binoculars text-4xl text-slate-600"></i>
-        <p class="text-sm font-mono text-slate-400">
-          該当するお宝動画は見つかりませんでした。
-        </p>
-        <p class="text-xs text-slate-500">
-          上の仕込みジャンルタグを押してみてください。
-        </p>
-      </div>
     </main>
 
     <!-- Bookmark Drawer / Modal -->
@@ -577,6 +520,7 @@
           },
         ];
 
+        let selectedCategory = "哲学";
         let currentResults = [];
         const bookmarks = new Set();
 
@@ -604,46 +548,70 @@
         }
 
         function setCategory(cat) {
-          const el = document.getElementById("keyword-input");
-          if (el) el.value = cat;
-          runDemoSearch();
+          selectedCategory = cat;
+
+          // タグのスタイル切り替え（アクティブ化）
+          const buttons = document.querySelectorAll(".chip-btn");
+          buttons.forEach((btn) => {
+            btn.classList.remove(
+              "border-cyan-500",
+              "bg-cyan-500/20",
+              "text-cyan-300",
+            );
+            btn.classList.add(
+              "border-slate-700",
+              "bg-slate-900/80",
+              "text-slate-300",
+            );
+          });
+
+          const activeBtn = document.getElementById("chip-" + cat);
+          if (activeBtn) {
+            activeBtn.classList.remove(
+              "border-slate-700",
+              "bg-slate-900/80",
+              "text-slate-300",
+            );
+            activeBtn.classList.add(
+              "border-cyan-500",
+              "bg-cyan-500/20",
+              "text-cyan-300",
+            );
+          }
+
+          const sonarStatus = document.getElementById("sonar-status-text");
+          if (sonarStatus) {
+            sonarStatus.textContent =
+              "選択中: #" + cat + " （探査ボタンで実行）";
+          }
         }
 
         function runDemoSearch() {
           const grid = document.getElementById("video-grid");
           const loading = document.getElementById("loading-overlay");
-          const empty = document.getElementById("empty-state");
+          const initialState = document.getElementById("initial-state");
+          const resultsToolbar = document.getElementById("results-toolbar");
           const countBadge = document.getElementById("results-count-badge");
           const sonarStatus = document.getElementById("sonar-status-text");
 
-          const kwInput = document.getElementById("keyword-input");
-          const keyword = (kwInput ? kwInput.value.trim() : "") || "哲学";
-
           if (grid) grid.innerHTML = "";
-          if (empty) empty.classList.add("hidden");
+          if (initialState) initialState.classList.add("hidden");
+          if (resultsToolbar) resultsToolbar.classList.remove("hidden");
           if (loading) loading.classList.remove("hidden");
           if (countBadge) countBadge.innerText = "照合中...";
           if (sonarStatus)
             sonarStatus.textContent =
-              "DEMO SCANNING // SEARCHING ARCHIVE DATABASE...";
+              "SCANNING // #" + selectedCategory + " の地層を照合中";
 
           setTimeout(() => {
             if (loading) loading.classList.add("hidden");
 
-            let matched = database.filter((item) => {
-              const k = keyword.toLowerCase();
-              return (
-                item.keyword.toLowerCase().includes(k) ||
-                item.title.toLowerCase().includes(k) ||
-                item.channel.toLowerCase().includes(k)
-              );
-            });
+            let matched = database.filter(
+              (item) => item.keyword === selectedCategory,
+            );
+            if (matched.length === 0) matched = database;
 
-            if (matched.length === 0) {
-              matched = database;
-            }
-
-            // ★常にシャッフルして最大3件のみを厳選抽出するロジック
+            // ランダムで最大3件のみを抽出
             currentResults = [...matched]
               .sort(() => 0.5 - Math.random())
               .slice(0, 3)
@@ -673,22 +641,14 @@
 
             if (sonarStatus) {
               sonarStatus.textContent =
-                "SONAR ACTIVE // キーワード: [ " + keyword + " ]";
+                "SONAR ACTIVE // #" + selectedCategory + " 発掘完了";
             }
 
-            if (currentResults.length === 0) {
-              if (empty) empty.classList.remove("hidden");
-              if (countBadge) countBadge.innerText = "0 件検出";
-              renderVideoGrid([]);
-              return;
-            }
-
-            if (empty) empty.classList.add("hidden");
             if (countBadge)
               countBadge.innerText = currentResults.length + " 件検出";
 
             renderVideoGrid(currentResults);
-          }, 800);
+          }, 600);
         }
 
         function renderVideoGrid(videos) {
@@ -722,15 +682,15 @@
                   ")</div>"
                 : "",
               "  </div>",
-              '  <div class="p-4 space-y-2">',
-              '    <h3 class="text-sm font-bold text-slate-100 line-clamp-2 leading-snug group-hover:text-cyan-300 transition">',
+              '  <div class="p-3.5 space-y-1.5">',
+              '    <h3 class="text-xs sm:text-sm font-bold text-slate-100 line-clamp-2 leading-snug group-hover:text-cyan-300 transition">',
               '      <a href="' +
                 vid.url +
                 '" target="_blank" rel="noopener noreferrer">' +
                 escapeHtml(vid.title) +
                 "</a>",
               "    </h3>",
-              '    <p class="text-xs text-slate-400 font-mono flex items-center gap-1">',
+              '    <p class="text-[11px] text-slate-400 font-mono flex items-center gap-1 truncate">',
               '      <i class="ph-bold ph-user-circle"></i>',
               '      <span class="truncate">' +
                 escapeHtml(vid.channel) +
@@ -738,11 +698,11 @@
               "    </p>",
               "  </div>",
               "</div>",
-              '<div class="px-4 pb-4 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono">',
-              '  <span class="text-emerald-400">' +
+              '<div class="px-3.5 pb-3 pt-1.5 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono">',
+              '  <span class="text-emerald-400 text-[11px]">' +
                 vid.viewCount.toLocaleString() +
                 " 回再生</span>",
-              '  <div class="flex items-center gap-2">',
+              '  <div class="flex items-center gap-1.5">',
               "    <button onclick=\"toggleBookmark('" +
                 vid.id +
                 '\')" class="p-1.5 rounded-lg border ' +
@@ -758,7 +718,7 @@
               "    </button>",
               '    <a href="' +
                 vid.url +
-                '" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-300 border border-slate-700 rounded-lg text-slate-300 transition flex items-center gap-1">',
+                '" target="_blank" rel="noopener noreferrer" class="px-2 py-1 bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-300 border border-slate-700 rounded-lg text-slate-300 text-[11px] transition flex items-center gap-1">',
               '      再生 <i class="ph-bold ph-arrow-square-out"></i>',
               "    </a>",
               "  </div>",
@@ -849,10 +809,6 @@
             currentResults.sort(
               (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt),
             );
-          } else if (type === "duration-desc") {
-            currentResults.sort(
-              (a, b) => b.durationMinutes - a.durationMinutes,
-            );
           }
           renderVideoGrid(currentResults);
         }
@@ -877,7 +833,7 @@
         document.addEventListener("DOMContentLoaded", function () {
           loadSavedBookmarks();
           updateBookmarkBadge();
-          runDemoSearch();
+          // 初期化時は動画検索を実行せず待機状態にする
         });
       })();
     </script>
