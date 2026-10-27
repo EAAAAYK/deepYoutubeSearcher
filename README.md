@@ -6,7 +6,7 @@
 <br>&nbsp;
 <br>---
 <br>&nbsp;
-<br>## 🚀 デモ・動作確認
+## 🚀 デモ・動作確認
 <br>&nbsp;
 <br><br>- \*\*Webデモ版（API不要）\*\*: [デモ版](https://eaaaayk.github.io/deepYoutubeSearcher/) 
 <br>※APIキーなしでUI動作やソナー探査演出、ブックマーク機能を体験できます。 
@@ -24,7 +24,7 @@
 <br>&nbsp;
 <br>---
 <br>&nbsp;
-<br>## 🛠 技術スタック 
+## 🛠 技術スタック 
 <br>- \*\*フロントエンド\*\*: HTML5, Tailwind CSS (CDN), JavaScript (ES6+) 
 <br>- \*\*バックエンド (本番環境)\*\*: Google Apps Script (GAS) 
 <br>- \*\*外部API\*\*: YouTube Data API v3 
