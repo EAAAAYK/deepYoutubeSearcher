@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="ja" class="dark">
+  <head>
+    <base target="_top" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube 深海発掘機 - Deep Search Engine</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              deep: {
+                900: "#070c14",
+                800: "#0f172a",
+                700: "#1e293b",
+                600: "#334155",
+              },
+              cyanAccent: "#06b6d4",
+              emeraldAccent: "#10b981",
+              neonGlow: "#22d3ee",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace", "Courier New"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+      body {
+        background-color: #070c14;
+        color: #f8fafc;
+      }
+      .cyber-card {
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(51, 65, 85, 0.5);
+      }
+      .cyber-card:hover {
+        border-color: rgba(6, 182, 212, 0.4);
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #070c14;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #06b6d4;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen pb-16 font-sans antialiased text-slate-200">
+    <!-- Header Navigation -->
+    <header
+      class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-30 backdrop-blur-md"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+          >
+            <i class="ph-bold ph-waves text-xl"></i>
+          </div>
+          <div>
+            <h1
+              class="text-base font-bold tracking-wider font-mono bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent"
+            >
+              DEEP YOUTUBE SEARCHER
+            </h1>
+            <p
+              class="text-[10px] text-slate-400 font-mono tracking-widest uppercase"
+            >
+              YouTube 深海発掘機 // GAS Edition
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            id="toggle-bookmarks-btn"
+            onclick="toggleBookmarkPanel()"
+            class="relative px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 hover:border-cyan-500/50 text-xs font-mono text-slate-300 transition flex items-center gap-2 cursor-pointer"
+          >
+            <i class="ph-bold ph-bookmark-simple text-cyan-400"></i>
+            <span>保存一覧</span>
+            <span
+              id="bookmark-count"
+              class="bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded text-[10px]"
+              >0</span
+            >
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+      <!-- Control Panel Section -->
+      <section
+        class="cyber-card rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden"
+      >
+        <div class="flex flex-col gap-5">
+          <!-- Status Board Header & GAS Parameter Inputs -->
+          <div
+            class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4"
+          >
+            <div
+              class="flex items-center gap-2 text-xs font-mono text-cyan-400"
+            >
+              <span
+                class="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse"
+              ></span>
+              <span id="sonar-status-text">SYSTEM READY // SONAR ACTIVE</span>
+            </div>
+
+            <!-- Parameters -->
+            <div
+              class="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-300"
+            >
+              <div
+                class="flex items-center gap-1.5 bg-slate-900/80 border border-slate-700/60 px-2.5 py-1 rounded-lg"
+              >
+                <label for="maxViews" class="text-slate-400">上限再生数:</label>
+                <input
+                  type="number"
+                  id="maxViews"
+                  value="5000"
+                  step="500"
+                  class="w-16 bg-slate-800 text-cyan-400 px-1.5 py-0.5 rounded border border-slate-700 text-right outline-none font-mono"
+                />
+                <span class="text-slate-400">回</span>
+              </div>
+
+              <div
+                class="flex items-center gap-1.5 bg-slate-900/80 border border-slate-700/60 px-2.5 py-1 rounded-lg"
+              >
+                <label for="minMinutes" class="text-slate-400">最小長さ:</label>
+                <input
+                  type="number"
+                  id="minMinutes"
+                  value="10"
+                  step="1"
+                  class="w-12 bg-slate-800 text-cyan-400 px-1.5 py-0.5 rounded border border-slate-700 text-right outline-none font-mono"
+                />
+                <span class="text-slate-400">分</span>
+              </div>
+
+              <label
+                class="flex items-center gap-1.5 bg-slate-900/80 border border-slate-700/60 px-2.5 py-1 rounded-lg cursor-pointer hover:border-slate-500 transition"
+              >
+                <input
+                  type="checkbox"
+                  id="useTimeTravel"
+                  checked
+                  class="w-3.5 h-3.5 rounded accent-cyan-400 cursor-pointer"
+                />
+                <span>タイムトラベル</span>
+              </label>
+
+              <label
+                class="flex items-center gap-1.5 bg-slate-900/80 border border-slate-700/60 px-2.5 py-1 rounded-lg cursor-pointer hover:border-slate-500 transition"
+              >
+                <input
+                  type="checkbox"
+                  id="noise-toggle"
+                  checked
+                  class="w-3.5 h-3.5 rounded accent-cyan-400 cursor-pointer"
+                />
+                <span>ノイズカット</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Main Search Controls Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <!-- Keyword Pool Box (8 cols) -->
+            <div class="lg:col-span-8 space-y-2">
+              <div class="flex items-center justify-between">
+                <label
+                  class="block text-xs font-mono text-slate-300 tracking-wider uppercase"
+                >
+                  検索ワードプール（カンマ区切り・自動記憶機能付）
+                </label>
+                <button
+                  onclick="resetWordPool()"
+                  class="text-[11px] font-mono text-slate-400 hover:text-rose-400 transition flex items-center gap-1 cursor-pointer"
+                >
+                  <i class="ph-bold ph-arrows-counter-clockwise"></i>
+                  初期設定に戻す
+                </button>
+              </div>
+
+              <div class="relative">
+                <textarea
+                  id="keyword-input"
+                  rows="2"
+                  oninput="saveWordPool()"
+                  placeholder="哲学, 思想, 考察, 雑記... カンマ区切りで入力"
+                  class="w-full bg-slate-900/90 border border-slate-700 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-xl px-4 py-2.5 pr-10 text-xs text-slate-100 placeholder-slate-500 outline-none font-mono transition leading-relaxed resize-none"
+                ></textarea>
+                <button
+                  onclick="clearKeyword()"
+                  class="absolute right-3 top-3 text-slate-500 hover:text-slate-300 text-sm p-1 cursor-pointer"
+                  title="全消去"
+                >
+                  <i class="ph-bold ph-x-circle"></i>
+                </button>
+              </div>
+
+              <!-- Keyword Preset Chips -->
+              <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
+                <span class="text-xs text-slate-500 font-mono mr-1"
+                  >追加プリセット:</span
+                >
+                <button
+                  onclick="addChip('哲学')"
+                  class="chip-btn px-2.5 py-0.5 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  +哲学
+                </button>
+                <button
+                  onclick="addChip('思想')"
+                  class="chip-btn px-2.5 py-0.5 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  +思想
+                </button>
+                <button
+                  onclick="addChip('ラジオ')"
+                  class="chip-btn px-2.5 py-0.5 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  +ラジオ
+                </button>
+                <button
+                  onclick="addChip('独り言')"
+                  class="chip-btn px-2.5 py-0.5 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  +独り言
+                </button>
+                <button
+                  onclick="addChip('意味')"
+                  class="chip-btn px-2.5 py-0.5 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  +意味
+                </button>
+                <button
+                  onclick="addChip('考察')"
+                  class="chip-btn px-2.5 py-0.5 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  +考察
+                </button>
+                <button
+                  onclick="addChip('散歩')"
+                  class="chip-btn px-2.5 py-0.5 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  +散歩
+                </button>
+                <button
+                  onclick="addChip('構造')"
+                  class="chip-btn px-2.5 py-0.5 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  +構造
+                </button>
+              </div>
+            </div>
+
+            <!-- Execution Button (4 cols) -->
+            <div
+              class="lg:col-span-4 space-y-3 flex flex-col justify-end pb-0.5"
+            >
+              <button
+                id="dive-btn"
+                onclick="startDive()"
+                class="w-full h-14 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold font-mono text-sm rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] transition transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i class="ph-bold ph-compass text-xl"></i>
+                <span>深海ソナー探査を開始</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Toolbar -->
+      <div class="flex items-center justify-between pt-2 px-1">
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-mono text-slate-300 flex items-center gap-2">
+            <i class="ph-bold ph-lightning text-cyan-400"></i>
+            発掘結果一覧
+          </h2>
+          <span
+            id="results-count-badge"
+            class="text-xs font-mono bg-slate-800 text-cyan-400 px-2 py-0.5 rounded border border-slate-700"
+            >0 件検出</span
+          >
+        </div>
+
+        <div class="flex items-center gap-2">
+          <select
+            id="sort-select"
+            onchange="sortResults()"
+            class="bg-slate-900 border border-slate-700 text-xs text-slate-300 font-mono rounded-lg px-2.5 py-1.5 outline-none cursor-pointer"
+          >
+            <option value="default">並び順: 標準（ランダム）</option>
+            <option value="views-asc">再生数: 少ない順</option>
+            <option value="views-desc">再生数: 多い順</option>
+            <option value="date-desc">投稿日: 新しい順</option>
+            <option value="duration-desc">動画長: 長い順</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div
+        id="loading-overlay"
+        class="hidden py-16 flex flex-col items-center justify-center text-center space-y-4"
+      >
+        <div class="relative w-16 h-16">
+          <div
+            class="absolute inset-0 rounded-full border-2 border-cyan-500/20 border-t-cyan-400 animate-spin"
+          ></div>
+          <div
+            class="absolute inset-2 rounded-full border-2 border-emerald-500/20 border-b-emerald-400 animate-spin"
+            style="animation-direction: reverse"
+          ></div>
+          <i
+            class="ph-bold ph-pulse text-cyan-400 text-xl absolute inset-0 m-auto animate-pulse"
+          ></i>
+        </div>
+        <p
+          class="text-xs font-mono text-cyan-400 tracking-widest animate-pulse"
+        >
+          GAS API 経由で深海探査中...
+        </p>
+      </div>
+
+      <!-- Video Grid -->
+      <div
+        id="video-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+      ></div>
+
+      <!-- Empty State -->
+      <div
+        id="empty-state"
+        class="hidden py-16 text-center space-y-3 border border-dashed border-slate-800 rounded-2xl"
+      >
+        <i class="ph-bold ph-binoculars text-4xl text-slate-600"></i>
+        <p class="text-sm font-mono text-slate-400">
+          お宝動画は見つかりませんでした。
+        </p>
+        <p class="text-xs text-slate-500">
+          探査ボタンを再実行するか、ワードプールに単語を追加してみてください。
+        </p>
+      </div>
+    </main>
+
+    <!-- Bookmark Drawer / Modal -->
+    <div
+      id="bookmark-drawer"
+      class="fixed inset-y-0 right-0 w-full max-w-md bg-slate-950/95 border-l border-slate-800 backdrop-blur-xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl"
+    >
+      <div
+        class="p-4 border-b border-slate-800 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-2 text-sm font-mono text-cyan-400">
+          <i class="ph-bold ph-bookmark-simple"></i>
+          <span>保存した動画</span>
+        </div>
+        <button
+          onclick="toggleBookmarkPanel()"
+          class="text-slate-400 hover:text-slate-200 p-1 cursor-pointer"
+        >
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      <div
+        id="bookmark-list"
+        class="flex-1 overflow-y-auto p-4 space-y-3"
+      ></div>
+      <div class="p-4 border-t border-slate-800 bg-slate-900/50">
+        <button
+          onclick="clearAllBookmarks()"
+          class="w-full py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-mono rounded-lg transition cursor-pointer"
+        >
+          保存リストを全削除
+        </button>
+      </div>
+    </div>
+
+    <!-- Script Section -->
+    <script>
+      (function () {
+        let currentResults = [];
+        const bookmarks = new Set();
+        const defaultPool =
+          "哲学, 思想, 考察, 雑記, 未解決, 検証, 独り言, 記録, アーカイブ, 散歩, 研究, エッセイ, 構造, 意味, 記憶, エントロピー, 個人製作, ラジオ, 街歩き, 夜";
+
+        function loadWordPool() {
+          try {
+            const savedPool = localStorage.getItem("deep_yt_word_pool");
+            const el = document.getElementById("keyword-input");
+            if (el) el.value = savedPool ? savedPool : defaultPool;
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        function saveWordPool() {
+          try {
+            const el = document.getElementById("keyword-input");
+            if (el) localStorage.setItem("deep_yt_word_pool", el.value);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        function resetWordPool() {
+          if (confirm("ワードプールを初期設定に戻しますか？")) {
+            const el = document.getElementById("keyword-input");
+            if (el) el.value = defaultPool;
+            localStorage.setItem("deep_yt_word_pool", defaultPool);
+          }
+        }
+
+        function addChip(val) {
+          const input = document.getElementById("keyword-input");
+          if (!input) return;
+          let current = input.value.trim();
+          if (current && !current.includes(val)) {
+            input.value = current + ", " + val;
+          } else if (!current) {
+            input.value = val;
+          }
+          saveWordPool();
+        }
+
+        function clearKeyword() {
+          const el = document.getElementById("keyword-input");
+          if (el) el.value = "";
+          saveWordPool();
+        }
+
+        function startDive() {
+          const grid = document.getElementById("video-grid");
+          const loading = document.getElementById("loading-overlay");
+          const empty = document.getElementById("empty-state");
+          const countBadge = document.getElementById("results-count-badge");
+          const sonarStatus = document.getElementById("sonar-status-text");
+
+          if (grid) grid.innerHTML = "";
+          if (empty) empty.classList.add("hidden");
+          if (loading) loading.classList.remove("hidden");
+          if (countBadge) countBadge.innerText = "探査中...";
+          if (sonarStatus)
+            sonarStatus.textContent = "SYSTEM BUSY // SCANNING DEEP SEA...";
+
+          saveWordPool();
+
+          const kwInput = document.getElementById("keyword-input");
+          const maxViewsInput = document.getElementById("maxViews");
+          const minMinInput = document.getElementById("minMinutes");
+          const timeTravelInput = document.getElementById("useTimeTravel");
+          const noiseToggleInput = document.getElementById("noise-toggle");
+
+          const params = {
+            keywordPool: (kwInput ? kwInput.value.trim() : "") || defaultPool,
+            maxViews:
+              parseInt(maxViewsInput ? maxViewsInput.value : "5000", 10) ||
+              5000,
+            minMinutes:
+              parseInt(minMinInput ? minMinInput.value : "10", 10) || 10,
+            useTimeTravel: timeTravelInput ? timeTravelInput.checked : true,
+            useNegative: noiseToggleInput ? noiseToggleInput.checked : true,
+          };
+
+          if (
+            typeof google !== "undefined" &&
+            google.script &&
+            google.script.run
+          ) {
+            google.script.run
+              .withSuccessHandler(handleGasSuccess)
+              .withFailureHandler(handleGasError)
+              .searchNicheVideosFromUI(params);
+          } else {
+            alert(
+              "GAS環境外です。GASのウェブアプリURLからアクセスしてください。",
+            );
+            if (loading) loading.classList.add("hidden");
+          }
+        }
+
+        function handleGasSuccess(response) {
+          const loading = document.getElementById("loading-overlay");
+          if (loading) loading.classList.add("hidden");
+
+          if (!response) {
+            handleGasError(new Error("GASからのレスポンスが空です"));
+            return;
+          }
+
+          const keyword = response.selectedKeyword || "ランダム選出";
+          const list = response.results || [];
+
+          const countBadge = document.getElementById("results-count-badge");
+          const sonarStatus = document.getElementById("sonar-status-text");
+
+          if (sonarStatus) {
+            sonarStatus.textContent =
+              "SONAR ACTIVE // 選出ワード: [ " + keyword + " ]";
+          }
+
+          const empty = document.getElementById("empty-state");
+          if (list.length === 0) {
+            if (empty) empty.classList.remove("hidden");
+            if (countBadge) countBadge.innerText = "0 件検出";
+            renderVideoGrid([]);
+            return;
+          }
+
+          if (empty) empty.classList.add("hidden");
+          if (countBadge) countBadge.innerText = list.length + " 件検出";
+
+          currentResults = list.map(function (v, idx) {
+            let yearsAgo = "";
+            if (v.publishedAt) {
+              const pubYear = new Date(v.publishedAt).getFullYear();
+              if (!isNaN(pubYear)) {
+                const diff = new Date().getFullYear() - pubYear;
+                yearsAgo = diff > 0 ? diff + "年前" : "今年";
+              }
+            }
+
+            const durMin =
+              typeof v.duration === "number"
+                ? v.duration
+                : parseInt(v.duration, 10) || 0;
+
+            return {
+              id: v.id || "vid_" + idx + "_" + Date.now(),
+              title: v.title || "無題",
+              channel: v.channel || "不明なチャンネル",
+              publishedAt: v.publishedAt || "",
+              yearsAgo: yearsAgo,
+              viewCount:
+                typeof v.views === "number"
+                  ? v.views
+                  : parseInt(v.views, 10) || 0,
+              durationMinutes: durMin,
+              durationFormatted: v.duration ? v.duration + "分" : "長尺",
+              url: v.url || "#",
+              thumbnail: v.thumbnail || "",
+            };
+          });
+
+          renderVideoGrid(currentResults);
+        }
+
+        function handleGasError(err) {
+          const loading = document.getElementById("loading-overlay");
+          if (loading) loading.classList.add("hidden");
+          const countBadge = document.getElementById("results-count-badge");
+          const sonarStatus = document.getElementById("sonar-status-text");
+
+          if (countBadge) countBadge.innerText = "エラー";
+          if (sonarStatus) sonarStatus.textContent = "SYSTEM ERROR // 探査失敗";
+
+          alert("探査エラーが発生しました:\n" + (err.message || err));
+        }
+
+        function renderVideoGrid(videos) {
+          const grid = document.getElementById("video-grid");
+          if (!grid) return;
+          grid.innerHTML = "";
+
+          videos.forEach(function (vid) {
+            const isBookmarked = bookmarks.has(vid.id);
+
+            const card = document.createElement("div");
+            card.className =
+              "cyber-card rounded-xl overflow-hidden flex flex-col justify-between group";
+
+            card.innerHTML = [
+              "<div>",
+              '  <div class="relative aspect-video bg-slate-900 overflow-hidden">',
+              '    <img src="' +
+                vid.thumbnail +
+                '" alt="' +
+                escapeHtml(vid.title) +
+                '" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85 group-hover:opacity-100">',
+              '    <div class="absolute bottom-2 right-2 bg-slate-950/80 backdrop-blur border border-slate-700/80 text-cyan-300 font-mono text-xs px-2 py-0.5 rounded">',
+              "      " + vid.durationFormatted,
+              "    </div>",
+              vid.yearsAgo
+                ? '<div class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur border border-slate-700/80 text-slate-300 font-mono text-xs px-2 py-0.5 rounded">' +
+                  vid.yearsAgo +
+                  " (" +
+                  vid.publishedAt +
+                  ")</div>"
+                : "",
+              "  </div>",
+              '  <div class="p-4 space-y-2">',
+              '    <h3 class="text-sm font-bold text-slate-100 line-clamp-2 leading-snug group-hover:text-cyan-300 transition">',
+              '      <a href="' +
+                vid.url +
+                '" target="_blank" rel="noopener noreferrer">' +
+                escapeHtml(vid.title) +
+                "</a>",
+              "    </h3>",
+              '    <p class="text-xs text-slate-400 font-mono flex items-center gap-1">',
+              '      <i class="ph-bold ph-user-circle"></i>',
+              '      <span class="truncate">' +
+                escapeHtml(vid.channel) +
+                "</span>",
+              "    </p>",
+              "  </div>",
+              "</div>",
+              '<div class="px-4 pb-4 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono">',
+              '  <span class="text-emerald-400">' +
+                vid.viewCount.toLocaleString() +
+                " 回再生</span>",
+              '  <div class="flex items-center gap-2">',
+              "    <button onclick=\"toggleBookmark('" +
+                vid.id +
+                '\')" class="p-1.5 rounded-lg border ' +
+                (isBookmarked
+                  ? "border-cyan-500 bg-cyan-500/20 text-cyan-300"
+                  : "border-slate-700 hover:border-slate-500 text-slate-400") +
+                ' transition cursor-pointer" title="キープ/保存">',
+              '      <i class="ph-bold ' +
+                (isBookmarked
+                  ? "ph-bookmark-simple-fill"
+                  : "ph-bookmark-simple") +
+                '"></i>',
+              "    </button>",
+              '    <a href="' +
+                vid.url +
+                '" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-300 border border-slate-700 rounded-lg text-slate-300 transition flex items-center gap-1">',
+              '      再生 <i class="ph-bold ph-arrow-square-out"></i>',
+              "    </a>",
+              "  </div>",
+              "</div>",
+            ].join("");
+            grid.appendChild(card);
+          });
+        }
+
+        function toggleBookmark(id) {
+          if (bookmarks.has(id)) {
+            bookmarks.delete(id);
+          } else {
+            bookmarks.add(id);
+          }
+          updateBookmarkBadge();
+          renderBookmarkDrawerList();
+          renderVideoGrid(currentResults);
+        }
+
+        function updateBookmarkBadge() {
+          const el = document.getElementById("bookmark-count");
+          if (el) el.innerText = bookmarks.size;
+        }
+
+        function toggleBookmarkPanel() {
+          const drawer = document.getElementById("bookmark-drawer");
+          if (drawer) drawer.classList.toggle("translate-x-full");
+        }
+
+        function renderBookmarkDrawerList() {
+          const list = document.getElementById("bookmark-list");
+          if (!list) return;
+          list.innerHTML = "";
+
+          if (bookmarks.size === 0) {
+            list.innerHTML =
+              '<p class="text-xs text-slate-500 text-center py-8 font-mono">保存された動画はありません</p>';
+            return;
+          }
+
+          currentResults.forEach(function (vid) {
+            if (bookmarks.has(vid.id)) {
+              const item = document.createElement("div");
+              item.className =
+                "p-3 bg-slate-900 border border-slate-800 rounded-lg flex gap-3 items-center justify-between";
+              item.innerHTML = [
+                '<div class="min-w-0 flex-1">',
+                '  <a href="' +
+                  vid.url +
+                  '" target="_blank" class="text-xs font-bold text-slate-200 hover:text-cyan-300 truncate block">' +
+                  escapeHtml(vid.title) +
+                  "</a>",
+                '  <p class="text-[10px] text-slate-400 font-mono">' +
+                  escapeHtml(vid.channel) +
+                  "・" +
+                  vid.viewCount.toLocaleString() +
+                  "回</p>",
+                "</div>",
+                "<button onclick=\"toggleBookmark('" +
+                  vid.id +
+                  '\')" class="text-xs text-rose-400 hover:text-rose-300 p-1 cursor-pointer">削除</button>',
+              ].join("");
+              list.appendChild(item);
+            }
+          });
+        }
+
+        function clearAllBookmarks() {
+          bookmarks.clear();
+          updateBookmarkBadge();
+          renderBookmarkDrawerList();
+          renderVideoGrid(currentResults);
+        }
+
+        function sortResults() {
+          const sel = document.getElementById("sort-select");
+          if (!sel) return;
+          const type = sel.value;
+          if (type === "views-asc") {
+            currentResults.sort(function (a, b) {
+              return a.viewCount - b.viewCount;
+            });
+          } else if (type === "views-desc") {
+            currentResults.sort(function (a, b) {
+              return b.viewCount - a.viewCount;
+            });
+          } else if (type === "date-desc") {
+            currentResults.sort(function (a, b) {
+              return new Date(b.publishedAt) - new Date(a.publishedAt);
+            });
+          } else if (type === "duration-desc") {
+            currentResults.sort(function (a, b) {
+              return b.durationMinutes - a.durationMinutes;
+            });
+          }
+          renderVideoGrid(currentResults);
+        }
+
+        function escapeHtml(str) {
+          return str
+            ? str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+            : "";
+        }
+
+        // 明示的に window オブジェクトへ紐付けて onclick エラーを防止
+        window.startDive = startDive;
+        window.loadWordPool = loadWordPool;
+        window.saveWordPool = saveWordPool;
+        window.resetWordPool = resetWordPool;
+        window.addChip = addChip;
+        window.clearKeyword = clearKeyword;
+        window.toggleBookmark = toggleBookmark;
+        window.toggleBookmarkPanel = toggleBookmarkPanel;
+        window.clearAllBookmarks = clearAllBookmarks;
+        window.sortResults = sortResults;
+
+        document.addEventListener("DOMContentLoaded", function () {
+          loadWordPool();
+          updateBookmarkBadge();
+        });
+      })();
+    </script>
+  </body>
+</html>

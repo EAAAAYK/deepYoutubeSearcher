@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="ja" class="dark">
+  <head>
+    <base target="_top" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DEEP YOUTUBE SEARCHER (DEMO)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              deep: {
+                900: "#070c14",
+                800: "#0f172a",
+                700: "#1e293b",
+                600: "#334155",
+              },
+              cyanAccent: "#06b6d4",
+              emeraldAccent: "#10b981",
+              neonGlow: "#22d3ee",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace", "Courier New"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+      body {
+        background-color: #070c14;
+        color: #f8fafc;
+      }
+      .cyber-card {
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(51, 65, 85, 0.5);
+      }
+      .cyber-card:hover {
+        border-color: rgba(6, 182, 212, 0.4);
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #070c14;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #06b6d4;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen pb-16 font-sans antialiased text-slate-200">
+    <!-- Header Navigation -->
+    <header
+      class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-30 backdrop-blur-md"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+          >
+            <i class="ph-bold ph-waves text-xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1
+                class="text-base font-bold tracking-wider font-mono bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent"
+              >
+                DEEP YOUTUBE SEARCHER
+              </h1>
+              <span
+                class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                >DEMO VERSION</span
+              >
+            </div>
+            <p
+              class="text-[10px] text-slate-400 font-mono tracking-widest uppercase"
+            >
+              YouTube 深海発掘機 // Interactive Portfolio Demo
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            id="toggle-bookmarks-btn"
+            onclick="toggleBookmarkPanel()"
+            class="relative px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 hover:border-cyan-500/50 text-xs font-mono text-slate-300 transition flex items-center gap-2 cursor-pointer"
+          >
+            <i class="ph-bold ph-bookmark-simple text-cyan-400"></i>
+            <span>保存一覧</span>
+            <span
+              id="bookmark-count"
+              class="bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded text-[10px]"
+              >0</span
+            >
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+      <!-- Control Panel Section -->
+      <section
+        class="cyber-card rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden"
+      >
+        <div class="flex flex-col gap-5">
+          <!-- Status Board Header -->
+          <div
+            class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4"
+          >
+            <div
+              class="flex items-center gap-2 text-xs font-mono text-cyan-400"
+            >
+              <span
+                class="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse"
+              ></span>
+              <span id="sonar-status-text"
+                >DEMO DATABASE READY // 24 ARCHIVES LOADED</span
+              >
+            </div>
+
+            <div
+              class="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-400"
+            >
+              <span
+                class="px-2.5 py-1 rounded bg-slate-800/90 border border-slate-700/60 text-slate-300"
+                >条件: ≤ 5,000回再生</span
+              >
+              <span
+                class="px-2.5 py-1 rounded bg-slate-800/90 border border-slate-700/60 text-slate-300"
+                >長尺: ≥ 10分</span
+              >
+              <span
+                class="px-2.5 py-1 rounded bg-slate-800/90 border border-slate-700/60 text-cyan-300"
+                >APIキー不要デモ</span
+              >
+            </div>
+          </div>
+
+          <!-- Main Search Controls Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <!-- Keyword Selection & Filter (8 cols) -->
+            <div class="lg:col-span-8 space-y-3">
+              <label
+                class="block text-xs font-mono text-slate-300 tracking-wider uppercase"
+              >
+                探査対象ジャンル選択（下のプリセットタグから選択）
+              </label>
+
+              <div class="relative">
+                <input
+                  type="text"
+                  id="keyword-input"
+                  value="哲学"
+                  readonly
+                  class="w-full bg-slate-900/60 border border-slate-800 text-cyan-300 font-bold rounded-xl px-4 py-3 pl-10 text-xs sm:text-sm outline-none font-mono cursor-not-allowed select-none"
+                />
+                <i
+                  class="ph-bold ph-tag absolute left-3.5 top-3.5 text-cyan-400 text-lg"
+                ></i>
+              </div>
+
+              <!-- Preset Categories -->
+              <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                <span class="text-xs text-slate-500 font-mono mr-1"
+                  >仕込みジャンル:</span
+                >
+                <button
+                  onclick="setCategory('哲学')"
+                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  #哲学・思想
+                </button>
+                <button
+                  onclick="setCategory('ラジオ')"
+                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  #深夜ラジオ
+                </button>
+                <button
+                  onclick="setCategory('朗読')"
+                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  #名作朗読
+                </button>
+                <button
+                  onclick="setCategory('アーカイブ')"
+                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  #個人アーカイブ
+                </button>
+                <button
+                  onclick="setCategory('布教')"
+                  class="chip-btn px-2.5 py-1 rounded-lg border border-slate-700/80 bg-slate-800/50 text-xs text-slate-300 hover:border-cyan-500/50 cursor-pointer"
+                >
+                  #【布教枠】C-C-B等
+                </button>
+              </div>
+            </div>
+
+            <!-- Execution Button (4 cols) -->
+            <div
+              class="lg:col-span-4 space-y-3 flex flex-col justify-end pb-0.5"
+            >
+              <button
+                id="dive-btn"
+                onclick="runDemoSearch()"
+                class="w-full h-14 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold font-mono text-sm rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] transition transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i class="ph-bold ph-compass text-xl"></i>
+                <span>ソナー探査開始（デモ発掘）</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Toolbar -->
+      <div class="flex items-center justify-between pt-2 px-1">
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-mono text-slate-300 flex items-center gap-2">
+            <i class="ph-bold ph-lightning text-cyan-400"></i>
+            発掘結果一覧
+          </h2>
+          <span
+            id="results-count-badge"
+            class="text-xs font-mono bg-slate-800 text-cyan-400 px-2 py-0.5 rounded border border-slate-700"
+            >3 件検出</span
+          >
+        </div>
+
+        <div class="flex items-center gap-2">
+          <select
+            id="sort-select"
+            onchange="sortResults()"
+            class="bg-slate-900 border border-slate-700 text-xs text-slate-300 font-mono rounded-lg px-2.5 py-1.5 outline-none cursor-pointer"
+          >
+            <option value="default">並び順: 標準（ランダム）</option>
+            <option value="views-asc">再生数: 少ない順</option>
+            <option value="views-desc">再生数: 多い順</option>
+            <option value="date-desc">投稿日: 新しい順</option>
+            <option value="duration-desc">動画長: 長い順</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div
+        id="loading-overlay"
+        class="hidden py-16 flex flex-col items-center justify-center text-center space-y-4"
+      >
+        <div class="relative w-16 h-16">
+          <div
+            class="absolute inset-0 rounded-full border-2 border-cyan-500/20 border-t-cyan-400 animate-spin"
+          ></div>
+          <div
+            class="absolute inset-2 rounded-full border-2 border-emerald-500/20 border-b-emerald-400 animate-spin"
+            style="animation-direction: reverse"
+          ></div>
+          <i
+            class="ph-bold ph-pulse text-cyan-400 text-xl absolute inset-0 m-auto animate-pulse"
+          ></i>
+        </div>
+        <p
+          class="text-xs font-mono text-cyan-400 tracking-widest animate-pulse"
+        >
+          ⚡ 時空の深層をスキャン中...（地層照合中）
+        </p>
+      </div>
+
+      <!-- Video Grid -->
+      <div
+        id="video-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+      ></div>
+
+      <!-- Empty State -->
+      <div
+        id="empty-state"
+        class="hidden py-16 text-center space-y-3 border border-dashed border-slate-800 rounded-2xl"
+      >
+        <i class="ph-bold ph-binoculars text-4xl text-slate-600"></i>
+        <p class="text-sm font-mono text-slate-400">
+          該当するお宝動画は見つかりませんでした。
+        </p>
+        <p class="text-xs text-slate-500">
+          上の仕込みジャンルタグを押してみてください。
+        </p>
+      </div>
+    </main>
+
+    <!-- Bookmark Drawer / Modal -->
+    <div
+      id="bookmark-drawer"
+      class="fixed inset-y-0 right-0 w-full max-w-md bg-slate-950/95 border-l border-slate-800 backdrop-blur-xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl"
+    >
+      <div
+        class="p-4 border-b border-slate-800 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-2 text-sm font-mono text-cyan-400">
+          <i class="ph-bold ph-bookmark-simple"></i>
+          <span>保存した動画</span>
+        </div>
+        <button
+          onclick="toggleBookmarkPanel()"
+          class="text-slate-400 hover:text-slate-200 p-1 cursor-pointer"
+        >
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      <div
+        id="bookmark-list"
+        class="flex-1 overflow-y-auto p-4 space-y-3"
+      ></div>
+      <div class="p-4 border-t border-slate-800 bg-slate-900/50">
+        <button
+          onclick="clearAllBookmarks()"
+          class="w-full py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-mono rounded-lg transition cursor-pointer"
+        >
+          保存リストを全削除
+        </button>
+      </div>
+    </div>
+
+    <!-- Script Section -->
+    <script>
+      (function () {
+        function buildThumbnailUrl(id) {
+          return "https://i.ytimg.com/vi/" + id + "/mqdefault.jpg";
+        }
+        function buildWatchUrl(id) {
+          return "https://www.youtube.com/watch?v=" + id;
+        }
+
+        const database = [
+          {
+            keyword: "哲学",
+            id: "kzsAtWKXonw",
+            title:
+              "2／2　愛の思想史／西洋 思想史・中心テーマとして　第 8 回　アウグスティヌス と愛 （１）／山本 芳久・教授・東京大学　NHK 歴史再発見",
+            channel: "愛の思想史／山本 芳久・東大教授",
+            publishedAt: "2021-08-25",
+            views: 1028,
+            duration: 15,
+          },
+          {
+            keyword: "哲学",
+            id: "BoZEoRvuMFk",
+            title: "ヘッセと東洋思想 (made with Spreaker)",
+            channel: "広瀬公巳",
+            publishedAt: "2021-08-25",
+            views: 11,
+            duration: 14,
+          },
+          {
+            keyword: "哲学",
+            id: "OJrDaGoq1GM",
+            title: "アート哲学【理解とは誤解である】",
+            channel: "いとざききみお【アート哲学】",
+            publishedAt: "2023-03-11",
+            views: 277,
+            duration: 27,
+          },
+          {
+            keyword: "哲学",
+            id: "m5ayvVeRSaE",
+            title: "哲学漫談　全てはメタコミュニケーションしていた！！",
+            channel: "ジョーカーモノイイ",
+            publishedAt: "2014-12-31",
+            views: 48,
+            duration: 33,
+          },
+          {
+            keyword: "哲学",
+            id: "VgMlTzUhSqo",
+            title: "《教科書が教えない人物と思想》「親鸞と歎異抄」（最終回）",
+            channel: "合理と道徳の経営論　窪山忠成",
+            publishedAt: "2012-11-13",
+            views: 93,
+            duration: 45,
+          },
+
+          {
+            keyword: "ラジオ",
+            id: "PeqZnVEJXBM",
+            title: "夏休みに体験した衝撃的な出来事　【パセリラジオ】第12回",
+            channel: "パセリ帝国・とうよん",
+            publishedAt: "2021-08-12",
+            views: 3809,
+            duration: 28,
+          },
+          {
+            keyword: "ラジオ",
+            id: "L73q67-47zQ",
+            title: "村下孝蔵　懐かしいラジオ番組007",
+            channel: "cpx00015",
+            publishedAt: "2013-08-12",
+            views: 4560,
+            duration: 24,
+          },
+          {
+            keyword: "ラジオ",
+            id: "QEFaIVOTELs",
+            title: "#051 ラジオCM特集　その1",
+            channel: "木村純のNEW BOSSA LUAR",
+            publishedAt: "2022-07-05",
+            views: 1069,
+            duration: 20,
+          },
+          {
+            keyword: "ラジオ",
+            id: "7fvu2dGfi8U",
+            title:
+              "［2022.06.02］ Tielle’s Radio Room | 006 ~モネとルノアール/cover Rainy Days And Monday~",
+            channel: "Tielle Official",
+            publishedAt: "2022-06-02",
+            views: 923,
+            duration: 25,
+          },
+
+          {
+            keyword: "朗読",
+            id: "1llIBBTEOy8",
+            title: "朗読雨月物語004菊花の約（上）",
+            channel: "hinomotomanaka555",
+            publishedAt: "2016-07-22",
+            views: 1523,
+            duration: 19,
+          },
+          {
+            keyword: "朗読",
+            id: "gTM5YzXXo40",
+            title: "くずし字を解読しましょう！　第12章　伊勢物語　第40段",
+            channel: "hitoshi saito",
+            publishedAt: "2015-07-06",
+            views: 495,
+            duration: 46,
+          },
+          {
+            keyword: "朗読",
+            id: "1N-zZ_6AMyw",
+            title:
+              "【名作朗読】『賢者の贈り物』 オー・ヘンリー/結城 浩（訳）【睡眠導入】【作業用BGM】",
+            channel: "有理子の朗読",
+            publishedAt: "2020-12-24",
+            views: 105,
+            duration: 22,
+          },
+          {
+            keyword: "朗読",
+            id: "r2hS1ePjW4c",
+            title: "朗読　太宰治『桜桃』",
+            channel: "シャボン 朗読横丁",
+            publishedAt: "2019-06-19",
+            views: 3777,
+            duration: 17,
+          },
+
+          {
+            keyword: "アーカイブ",
+            id: "tkOUkivps7c",
+            title: "ルセッティア　アーカイブpart2（part1は消えてしまった）",
+            channel: "OTIKA SEVEN",
+            publishedAt: "2016-06-30",
+            views: 2,
+            duration: 75,
+          },
+          {
+            keyword: "アーカイブ",
+            id: "re-nakwO6-U",
+            title:
+              "シンポジウム『アーカイブ資本論：「本当に使えるアーカイブ」を求めて』閉会宣言",
+            channel: "一般社団法人インターネットユーザー協会（MIAU）",
+            publishedAt: "2016-06-11",
+            views: 269,
+            duration: 97,
+          },
+          {
+            keyword: "アーカイブ",
+            id: "S7WLVImA-yQ",
+            title: "My Planner Archive System",
+            channel: "PrettyLittlePocket",
+            publishedAt: "2020-12-21",
+            views: 4962,
+            duration: 34,
+          },
+          {
+            keyword: "アーカイブ",
+            id: "SnNOw2YA2jc",
+            title:
+              "イーストコートオンラインライブvol.63 / アーカイブ2021.2.21【無観客】",
+            channel: "飯能イーストコート",
+            publishedAt: "2021-02-21",
+            views: 400,
+            duration: 106,
+          },
+
+          {
+            keyword: "布教",
+            id: "RrAweLuDU88",
+            title: "Naimononedarino I Want You",
+            channel: "ココナッツ・ボーイズ (C-C-B) - トピック",
+            publishedAt: "2018-08-05",
+            views: 253147,
+            duration: 4,
+          },
+          {
+            keyword: "布教",
+            id: "iQUuwJNHqYU",
+            title: "空想KISS 2",
+            channel: "ふるびあ",
+            publishedAt: "2015-05-06",
+            views: 84154,
+            duration: 3,
+          },
+          {
+            keyword: "布教",
+            id: "EijnuAYWYAE",
+            title: "2 Much, I Love U.",
+            channel: "ココナッツ・ボーイズ (C-C-B) - トピック",
+            publishedAt: "2018-10-26",
+            views: 97299,
+            duration: 3,
+          },
+          {
+            keyword: "布教",
+            id: "mlSwo-NJAPU",
+            title: "Lucky Chance Wo Mouichido (Single Mix)",
+            channel: "ココナッツ・ボーイズ (C-C-B) - トピック",
+            publishedAt: "2018-10-26",
+            views: 502341,
+            duration: 3,
+          },
+          {
+            keyword: "布教",
+            id: "WwlAxwxHWKQ",
+            title: "東京･･･ナイト・フェイス",
+            channel: "ふるびあ",
+            publishedAt: "2019-03-06",
+            views: 79355,
+            duration: 3,
+          },
+          {
+            keyword: "布教",
+            id: "2T7TXVtGGFc",
+            title: "Yellow Magic Orchestra - Tong Poo (1978)",
+            channel: "YMO Unofficial",
+            publishedAt: "2015-05-06",
+            views: 2885191,
+            duration: 6,
+          },
+          {
+            keyword: "布教",
+            id: "SX0COJ-y8yc",
+            title: "Saori Minami 南 沙織 - 純潔 (Junketsu) Innocent 1972",
+            channel: "saori-chan74",
+            publishedAt: "2022-04-05",
+            views: 77653,
+            duration: 3,
+          },
+        ];
+
+        let currentResults = [];
+        const bookmarks = new Set();
+
+        function loadSavedBookmarks() {
+          try {
+            const raw = localStorage.getItem("deep_yt_demo_bookmarks");
+            if (raw) {
+              const arr = JSON.parse(raw);
+              arr.forEach((id) => bookmarks.add(id));
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        function saveBookmarksToStorage() {
+          try {
+            localStorage.setItem(
+              "deep_yt_demo_bookmarks",
+              JSON.stringify(Array.from(bookmarks)),
+            );
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        function setCategory(cat) {
+          const el = document.getElementById("keyword-input");
+          if (el) el.value = cat;
+          runDemoSearch();
+        }
+
+        function runDemoSearch() {
+          const grid = document.getElementById("video-grid");
+          const loading = document.getElementById("loading-overlay");
+          const empty = document.getElementById("empty-state");
+          const countBadge = document.getElementById("results-count-badge");
+          const sonarStatus = document.getElementById("sonar-status-text");
+
+          const kwInput = document.getElementById("keyword-input");
+          const keyword = (kwInput ? kwInput.value.trim() : "") || "哲学";
+
+          if (grid) grid.innerHTML = "";
+          if (empty) empty.classList.add("hidden");
+          if (loading) loading.classList.remove("hidden");
+          if (countBadge) countBadge.innerText = "照合中...";
+          if (sonarStatus)
+            sonarStatus.textContent =
+              "DEMO SCANNING // SEARCHING ARCHIVE DATABASE...";
+
+          setTimeout(() => {
+            if (loading) loading.classList.add("hidden");
+
+            let matched = database.filter((item) => {
+              const k = keyword.toLowerCase();
+              return (
+                item.keyword.toLowerCase().includes(k) ||
+                item.title.toLowerCase().includes(k) ||
+                item.channel.toLowerCase().includes(k)
+              );
+            });
+
+            if (matched.length === 0) {
+              matched = database;
+            }
+
+            // ★常にシャッフルして最大3件のみを厳選抽出するロジック
+            currentResults = [...matched]
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 3)
+              .map((v) => {
+                let yearsAgo = "";
+                if (v.publishedAt) {
+                  const pubYear = new Date(v.publishedAt).getFullYear();
+                  if (!isNaN(pubYear)) {
+                    const diff = new Date().getFullYear() - pubYear;
+                    yearsAgo = diff > 0 ? diff + "年前" : "今年";
+                  }
+                }
+
+                return {
+                  id: v.id,
+                  title: v.title,
+                  channel: v.channel,
+                  publishedAt: v.publishedAt,
+                  yearsAgo: yearsAgo,
+                  viewCount: v.views,
+                  durationMinutes: v.duration,
+                  durationFormatted: v.duration + "分",
+                  url: buildWatchUrl(v.id),
+                  thumbnail: buildThumbnailUrl(v.id),
+                };
+              });
+
+            if (sonarStatus) {
+              sonarStatus.textContent =
+                "SONAR ACTIVE // キーワード: [ " + keyword + " ]";
+            }
+
+            if (currentResults.length === 0) {
+              if (empty) empty.classList.remove("hidden");
+              if (countBadge) countBadge.innerText = "0 件検出";
+              renderVideoGrid([]);
+              return;
+            }
+
+            if (empty) empty.classList.add("hidden");
+            if (countBadge)
+              countBadge.innerText = currentResults.length + " 件検出";
+
+            renderVideoGrid(currentResults);
+          }, 800);
+        }
+
+        function renderVideoGrid(videos) {
+          const grid = document.getElementById("video-grid");
+          if (!grid) return;
+          grid.innerHTML = "";
+
+          videos.forEach(function (vid) {
+            const isBookmarked = bookmarks.has(vid.id);
+
+            const card = document.createElement("div");
+            card.className =
+              "cyber-card rounded-xl overflow-hidden flex flex-col justify-between group";
+
+            card.innerHTML = [
+              "<div>",
+              '  <div class="relative aspect-video bg-slate-900 overflow-hidden">',
+              '    <img src="' +
+                vid.thumbnail +
+                '" alt="' +
+                escapeHtml(vid.title) +
+                '" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-85 group-hover:opacity-100">',
+              '    <div class="absolute bottom-2 right-2 bg-slate-950/80 backdrop-blur border border-slate-700/80 text-cyan-300 font-mono text-xs px-2 py-0.5 rounded">',
+              "      " + vid.durationFormatted,
+              "    </div>",
+              vid.yearsAgo
+                ? '<div class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur border border-slate-700/80 text-slate-300 font-mono text-xs px-2 py-0.5 rounded">' +
+                  vid.yearsAgo +
+                  " (" +
+                  vid.publishedAt +
+                  ")</div>"
+                : "",
+              "  </div>",
+              '  <div class="p-4 space-y-2">',
+              '    <h3 class="text-sm font-bold text-slate-100 line-clamp-2 leading-snug group-hover:text-cyan-300 transition">',
+              '      <a href="' +
+                vid.url +
+                '" target="_blank" rel="noopener noreferrer">' +
+                escapeHtml(vid.title) +
+                "</a>",
+              "    </h3>",
+              '    <p class="text-xs text-slate-400 font-mono flex items-center gap-1">',
+              '      <i class="ph-bold ph-user-circle"></i>',
+              '      <span class="truncate">' +
+                escapeHtml(vid.channel) +
+                "</span>",
+              "    </p>",
+              "  </div>",
+              "</div>",
+              '<div class="px-4 pb-4 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono">',
+              '  <span class="text-emerald-400">' +
+                vid.viewCount.toLocaleString() +
+                " 回再生</span>",
+              '  <div class="flex items-center gap-2">',
+              "    <button onclick=\"toggleBookmark('" +
+                vid.id +
+                '\')" class="p-1.5 rounded-lg border ' +
+                (isBookmarked
+                  ? "border-cyan-500 bg-cyan-500/20 text-cyan-300"
+                  : "border-slate-700 hover:border-slate-500 text-slate-400") +
+                ' transition cursor-pointer" title="キープ/保存">',
+              '      <i class="ph-bold ' +
+                (isBookmarked
+                  ? "ph-bookmark-simple-fill"
+                  : "ph-bookmark-simple") +
+                '"></i>',
+              "    </button>",
+              '    <a href="' +
+                vid.url +
+                '" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-300 border border-slate-700 rounded-lg text-slate-300 transition flex items-center gap-1">',
+              '      再生 <i class="ph-bold ph-arrow-square-out"></i>',
+              "    </a>",
+              "  </div>",
+              "</div>",
+            ].join("");
+            grid.appendChild(card);
+          });
+        }
+
+        function toggleBookmark(id) {
+          if (bookmarks.has(id)) {
+            bookmarks.delete(id);
+          } else {
+            bookmarks.add(id);
+          }
+          saveBookmarksToStorage();
+          updateBookmarkBadge();
+          renderBookmarkDrawerList();
+          renderVideoGrid(currentResults);
+        }
+
+        function updateBookmarkBadge() {
+          const el = document.getElementById("bookmark-count");
+          if (el) el.innerText = bookmarks.size;
+        }
+
+        function toggleBookmarkPanel() {
+          const drawer = document.getElementById("bookmark-drawer");
+          if (drawer) drawer.classList.toggle("translate-x-full");
+        }
+
+        function renderBookmarkDrawerList() {
+          const list = document.getElementById("bookmark-list");
+          if (!list) return;
+          list.innerHTML = "";
+
+          if (bookmarks.size === 0) {
+            list.innerHTML =
+              '<p class="text-xs text-slate-500 text-center py-8 font-mono">保存された動画はありません</p>';
+            return;
+          }
+
+          database.forEach(function (vid) {
+            if (bookmarks.has(vid.id)) {
+              const watchUrl = buildWatchUrl(vid.id);
+              const item = document.createElement("div");
+              item.className =
+                "p-3 bg-slate-900 border border-slate-800 rounded-lg flex gap-3 items-center justify-between";
+              item.innerHTML = [
+                '<div class="min-w-0 flex-1">',
+                '  <a href="' +
+                  watchUrl +
+                  '" target="_blank" class="text-xs font-bold text-slate-200 hover:text-cyan-300 truncate block">' +
+                  escapeHtml(vid.title) +
+                  "</a>",
+                '  <p class="text-[10px] text-slate-400 font-mono">' +
+                  escapeHtml(vid.channel) +
+                  "・" +
+                  vid.views.toLocaleString() +
+                  "回</p>",
+                "</div>",
+                "<button onclick=\"toggleBookmark('" +
+                  vid.id +
+                  '\')" class="text-xs text-rose-400 hover:text-rose-300 p-1 cursor-pointer">削除</button>',
+              ].join("");
+              list.appendChild(item);
+            }
+          });
+        }
+
+        function clearAllBookmarks() {
+          bookmarks.clear();
+          saveBookmarksToStorage();
+          updateBookmarkBadge();
+          renderBookmarkDrawerList();
+          renderVideoGrid(currentResults);
+        }
+
+        function sortResults() {
+          const sel = document.getElementById("sort-select");
+          if (!sel) return;
+          const type = sel.value;
+          if (type === "views-asc") {
+            currentResults.sort((a, b) => a.viewCount - b.viewCount);
+          } else if (type === "views-desc") {
+            currentResults.sort((a, b) => b.viewCount - a.viewCount);
+          } else if (type === "date-desc") {
+            currentResults.sort(
+              (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt),
+            );
+          } else if (type === "duration-desc") {
+            currentResults.sort(
+              (a, b) => b.durationMinutes - a.durationMinutes,
+            );
+          }
+          renderVideoGrid(currentResults);
+        }
+
+        function escapeHtml(str) {
+          return str
+            ? str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+            : "";
+        }
+
+        window.runDemoSearch = runDemoSearch;
+        window.setCategory = setCategory;
+        window.toggleBookmark = toggleBookmark;
+        window.toggleBookmarkPanel = toggleBookmarkPanel;
+        window.clearAllBookmarks = clearAllBookmarks;
+        window.sortResults = sortResults;
+
+        document.addEventListener("DOMContentLoaded", function () {
+          loadSavedBookmarks();
+          updateBookmarkBadge();
+          runDemoSearch();
+        });
+      })();
+    </script>
+  </body>
+</html>
