@@ -36,5 +36,5 @@
 <br>\`\`\`text 
 <br>├── index.html # スタンドアロンWebデモ版（ポートフォリオ展示用） 
 <br>└── GAS版/ 
-  ├── Code.gs # GASバックエンド処理（YouTube API呼び出し・データ整形） 
-  └── Index.html # GASウェブアプリ用フロントエンドHTML
+<br>  ├── Code.gs # GASバックエンド処理（YouTube API呼び出し・データ整形） 
+<br>  └── Index.html # GASウェブアプリ用フロントエンドHTML
